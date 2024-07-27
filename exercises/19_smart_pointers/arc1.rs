@@ -21,25 +21,17 @@ use std::{sync::Arc, thread};
 
 fn main() {
     let numbers: Vec<_> = (0..100u32).collect();
-
-    // TODO: Define `shared_numbers` by using `Arc`.
-    // let shared_numbers = ???;
-
-    let mut join_handles = Vec::new();
+    let shared_numbers = Arc::new(numbers);// TODO
+    let mut joinhandles = Vec::new();
 
     for offset in 0..8 {
-        // TODO: Define `child_numbers` using `shared_numbers`.
-        // let child_numbers = ???;
-
-        let handle = thread::spawn(move || {
+        let child_numbers = Arc::clone(&shared_numbers);// TODO
+        joinhandles.push(thread::spawn(move || {
             let sum: u32 = child_numbers.iter().filter(|&&n| n % 8 == offset).sum();
-            println!("Sum of offset {offset} is {sum}");
-        });
-
-        join_handles.push(handle);
+            println!("Sum of offset {} is {}", offset, sum);
+        }));
     }
-
-    for handle in join_handles.into_iter() {
+    for handle in joinhandles.into_iter() {
         handle.join().unwrap();
     }
 }

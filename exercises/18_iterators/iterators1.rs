@@ -10,16 +10,15 @@ fn main() {
 mod tests {
     #[test]
     fn iterators() {
-        let my_fav_fruits = ["banana", "custard apple", "avocado", "peach", "raspberry"];
+        let my_fav_fruits = vec!["banana", "custard apple", "avocado", "peach", "raspberry"];
 
-        // TODO: Create an iterator over the array.
-        let mut fav_fruits_iterator = todo!();
-
-        assert_eq!(fav_fruits_iterator.next(), Some(&"banana"));
-        assert_eq!(fav_fruits_iterator.next(), todo!()); // TODO: Replace `todo!()`
-        assert_eq!(fav_fruits_iterator.next(), Some(&"avocado"));
-        assert_eq!(fav_fruits_iterator.next(), todo!()); // TODO: Replace `todo!()`
-        assert_eq!(fav_fruits_iterator.next(), Some(&"raspberry"));
-        assert_eq!(fav_fruits_iterator.next(), todo!()); // TODO: Replace `todo!()`
+        let mut my_iterable_fav_fruits = my_fav_fruits.iter();   // TODO: Step 1
+    
+        assert_eq!(my_iterable_fav_fruits.next(), Some(&"banana"));
+        assert_eq!(my_iterable_fav_fruits.next(), Some(&"custard apple"));     // TODO: Step 2
+        assert_eq!(my_iterable_fav_fruits.next(), Some(&"avocado"));
+        assert_eq!(my_iterable_fav_fruits.next(), Some(&"peach"));     // TODO: Step 3
+        assert_eq!(my_iterable_fav_fruits.next(), Some(&"raspberry"));
+        assert_eq!(my_iterable_fav_fruits.next(), None);     // TODO: Step 4
     }
 }

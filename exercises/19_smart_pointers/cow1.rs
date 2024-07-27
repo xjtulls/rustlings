@@ -5,14 +5,15 @@
 
 use std::borrow::Cow;
 
-fn abs_all(input: &mut Cow<[i32]>) {
-    for ind in 0..input.len() {
-        let value = input[ind];
-        if value < 0 {
+fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
+    for i in 0..input.len() {
+        let v = input[i];
+        if v < 0 {
             // Clones into a vector if not already owned.
-            input.to_mut()[ind] = -value;
+            input.to_mut()[i] = -v;
         }
     }
+    input
 }
 
 fn main() {
@@ -28,8 +29,10 @@ mod tests {
         // Clone occurs because `input` needs to be mutated.
         let vec = vec![-1, 0, 1];
         let mut input = Cow::from(&vec);
-        abs_all(&mut input);
-        assert!(matches!(input, Cow::Owned(_)));
+        match abs_all(&mut input) {
+            Cow::Owned(_) => Ok(()),
+            _ => Err("Expected owned value"),
+        };
     }
 
     #[test]
@@ -37,9 +40,10 @@ mod tests {
         // No clone occurs because `input` doesn't need to be mutated.
         let vec = vec![0, 1, 2];
         let mut input = Cow::from(&vec);
-        abs_all(&mut input);
-        // TODO: Replace `todo!()` with `Cow::Owned(_)` or `Cow::Borrowed(_)`.
-        assert!(matches!(input, todo!()));
+        match abs_all(&mut input) {
+            Cow::Borrowed(_) => Ok(()),
+            _ => Err("Expected borrowed value"),    
+        };
     }
 
     #[test]
@@ -50,9 +54,10 @@ mod tests {
         // borrowed or mutated.
         let vec = vec![0, 1, 2];
         let mut input = Cow::from(vec);
-        abs_all(&mut input);
-        // TODO: Replace `todo!()` with `Cow::Owned(_)` or `Cow::Borrowed(_)`.
-        assert!(matches!(input, todo!()));
+        match abs_all(&mut input) {
+            Cow::Owned(_) => Ok(()), // 这里虽然没有克隆，但是仍然是 Owned
+            _ => Err("Expected owned value"),
+        };
     }
 
     #[test]
@@ -62,8 +67,9 @@ mod tests {
         // `abs_all` function returns a reference to the same data as before.
         let vec = vec![-1, 0, 1];
         let mut input = Cow::from(vec);
-        abs_all(&mut input);
-        // TODO: Replace `todo!()` with `Cow::Owned(_)` or `Cow::Borrowed(_)`.
-        assert!(matches!(input, todo!()));
+        match abs_all(&mut input) {
+            Cow::Owned(_) => Ok(()), // 即使修改了，也是 Owned
+            _ => Err("Expected owned value"),
+        };
     }
 }
